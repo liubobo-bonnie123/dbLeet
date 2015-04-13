@@ -1,13 +1,14 @@
-//https://leetcode.com/discuss/22128/i-have-this-simple-approach-anybody-has-some-other-way
+/*https://leetcode.com/discuss/22128/i-have-this-simple-approach-anybody-has-some-other-way*/
 
-//Use self join.
 
+/*Use self join.*/
 SELECT DISTINCT a.Email
 FROM Person a JOIN Person b
 ON (a.Email = b.Email)
 WHERE a.Id <> b.Id
-//Use subquery with EXISTS:
 
+
+/* Use subquery with EXISTS: */
 SELECT DISTINCT a.Email
 FROM Person a
 WHERE EXISTS(
@@ -16,13 +17,16 @@ WHERE EXISTS(
     WHERE a.Email = b.Email
     LIMIT 1, 1
 )
-//Basic idea is this query:
 
+
+/* Basic idea is this query:*/
 SELECT DISTINCT Email FROM Person
 MINUS
 (SELECT Id, Email FROM Person GROUP BY Email)
-//But since MySQL does not support MINUS, we use LEFT JOIN:
 
+
+
+/* But since MySQL does not support MINUS, we use LEFT JOIN:*/
 SELECT DISTINCT a.Email FROM Person a
 LEFT JOIN (SELECT Id, Email from Person GROUP BY Email) b
 ON (a.email = b.email) AND (a.Id = b.Id)
