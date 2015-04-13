@@ -1,4 +1,24 @@
-SELECT t3.Name AS Department, t1.Name AS Employee, t1.Salary AS Salary
-FROM Employee t1
-JOIN (SELECT DepartmentId, max(Salary) AS Salary FROM Employee GROUP BY DepartmentId) t2 ON t1.DepartmentId = t2.DepartmentId AND t1.Salary = t2.Salary
-JOIN Department t3 ON t1.DepartmentId = t3.Id
+SELECT D.Name AS Department ,E.Name AS Employee ,E.Salary 
+FROM
+    Employee E,
+    (SELECT DepartmentId,max(Salary) as max FROM Employee GROUP BY DepartmentId) T,
+    Department D
+WHERE E.DepartmentId = T.DepartmentId 
+  AND E.Salary = T.max
+  AND E.DepartmentId = D.id
+
+SELECT D.Name,A.Name,A.Salary 
+FROM 
+    Employee A,
+    Department D   
+WHERE A.DepartmentId = D.Id 
+  AND NOT EXISTS 
+  (SELECT 1 FROM Employee B WHERE B.Salary > A.Salary AND A.DepartmentId = B.DepartmentId) 
+
+SELECT D.Name AS Department ,E.Name AS Employee ,E.Salary 
+from 
+    Employee E,
+    Department D 
+WHERE E.DepartmentId = D.id 
+  AND (DepartmentId,Salary) in 
+  (SELECT DepartmentId,max(Salary) as max FROM Employee GROUP BY DepartmentId) 
