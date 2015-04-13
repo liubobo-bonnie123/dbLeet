@@ -1,1 +1,29 @@
-SELECT DISTINCT t1.Email FROM Person t1 JOIN Person t2 ON t1.Email = t2.Email AND t1.Id < t2.Id
+//https://leetcode.com/discuss/22128/i-have-this-simple-approach-anybody-has-some-other-way
+
+//Use self join.
+
+SELECT DISTINCT a.Email
+FROM Person a JOIN Person b
+ON (a.Email = b.Email)
+WHERE a.Id <> b.Id
+//Use subquery with EXISTS:
+
+SELECT DISTINCT a.Email
+FROM Person a
+WHERE EXISTS(
+    SELECT 1
+    FROM Person b
+    WHERE a.Email = b.Email
+    LIMIT 1, 1
+)
+//Basic idea is this query:
+
+SELECT DISTINCT Email FROM Person
+MINUS
+(SELECT Id, Email FROM Person GROUP BY Email)
+//But since MySQL does not support MINUS, we use LEFT JOIN:
+
+SELECT DISTINCT a.Email FROM Person a
+LEFT JOIN (SELECT Id, Email from Person GROUP BY Email) b
+ON (a.email = b.email) AND (a.Id = b.Id)
+WHERE b.Email IS NULL
