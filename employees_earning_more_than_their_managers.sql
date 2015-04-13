@@ -1,1 +1,3 @@
-SELECT t1.Name AS Employee FROM Employee t1 JOIN Employee t2 ON t1.ManagerId = t2.Id WHERE t1.Salary > t2.Salary
+select E1.Name 
+from Employee as E1, Employee as E2 
+where E1.ManagerId = E2.Id and E1.Salary > E2.Salary
