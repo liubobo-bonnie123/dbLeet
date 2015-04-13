@@ -1,1 +1,11 @@
-SELECT t1.Name AS Customers FROM Customers t1 LEFT JOIN Orders t2 ON t1.Id = t2.CustomerId WHERE t2.Id IS NULL
+SELECT A.Name from Customers A
+WHERE NOT EXISTS (SELECT 1 FROM Orders B WHERE A.Id = B.CustomerId)
+
+
+SELECT A.Name from Customers A
+LEFT JOIN Orders B on  A.Id = B.CustomerId
+WHERE B.CustomerId is NULL
+
+
+SELECT A.Name from Customers A
+WHERE A.Id NOT IN (SELECT B.CustomerId from Orders B)
